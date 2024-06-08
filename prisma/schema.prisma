@@ -1,0 +1,68 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextIndex", "fullTextSearch"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Products {
+  code         String   @id
+  name         String
+  images       String?  @db.Text
+  product_type String?  @db.Text
+  rating       Float    @default(0)
+  price        Float?
+  discount     Float?
+  description  String?  @db.Text
+  quantity     Int      @default(0)
+  video        String?  @db.Text
+  group        String?
+  is_show      Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime
+  sold         Int      @default(0)
+  Carts        Carts[]
+
+  @@index([code], map: "Products_code_idx")
+}
+
+model Carts {
+  code              String   @id @default(uuid())
+  cart_code         String
+  product           Products @relation(fields: [cart_code], references: [code], onDelete: Cascade)
+  quantity_cart     Int
+  product_type_cart String
+  total_cart        Float
+
+  @@unique([cart_code])
+  @@index([cart_code])
+}
+
+model Users {
+  code      String   @id @default(uuid())
+  image     String?  @db.Text
+  username  String
+  password  String
+  role      Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  @@unique([username])
+  @@index([code])
+}
+
+model Orders {
+  code        String   @id @default(uuid())
+  fullName    String
+  email       String
+  phone       Int
+  address     String
+  quantity    Int
+  products    Json[]
+  total_price Float
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+}
