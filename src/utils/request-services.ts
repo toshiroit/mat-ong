@@ -5,6 +5,6 @@ export const requestServices = axios.create({
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "*",
   },
-  baseURL: process.env.BACKEND_URL,
+  baseURL: "https://mat-ong.vercel.app/api",
   method: "POST",
 });
